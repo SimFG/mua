@@ -1,0 +1,8 @@
+__pycache__/
+.pytest_cache
+draft/
+dist/
+build/
+*.spec
+.env
+.ruff_cache/
