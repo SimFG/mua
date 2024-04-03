@@ -57,7 +57,7 @@ brew install simfg/su/mucli
 可以从 [GitHub Release](https://github.com/SimFG/mua/releases/) 中下载二进制文件，然后将其设置为 PATH 环境变量。
 
 ```
-wget https://github.com/SimFG/mua/releases/download/0.0.1/mucli-v0.0.1-linux.tar.gz -O mucli.tar.gz
+wget https://github.com/SimFG/mua/releases/download/0.0.2/mucli-v0.0.2-linux.tar.gz -O mucli.tar.gz
 
 tar -zxvf mucli.tar.gz
 ```

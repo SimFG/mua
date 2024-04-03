@@ -57,7 +57,7 @@ brew install simfg/su/mucli
 You can download the binary from the [GitHub Release](https://github.com/SimFG/mua/releases/) and then add it to the PATH environment variable.
 
 ```
-wget https://github.com/SimFG/mua/releases/download/0.0.1/mucli-v0.0.1-linux.tar.gz -O mucli.tar.gz
+wget https://github.com/SimFG/mua/releases/download/0.0.2/mucli-v0.0.2-linux.tar.gz -O mucli.tar.gz
 
 tar -zxvf mucli.tar.gz
 ```
