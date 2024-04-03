@@ -4,5 +4,7 @@ draft/
 dist/
 build/
 *.spec
-.env
+*.env
 .ruff_cache/
+.vscode/
+.bw_config/
