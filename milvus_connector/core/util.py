@@ -381,7 +381,7 @@ def generate_random_data(row_num: int, field_name: str, data_type: DataType, dim
         case DataType.Int64:
             return LongData(field_name=field_name,
                             dtype=dtype_str,
-                            data=[random.randint(-128, 127) for _ in range(row_num)])
+                            data=[random.randint(-2048, 2048) for _ in range(row_num)])
         case DataType.Float:
             return FloatData(field_name=field_name,
                              dtype=dtype_str,

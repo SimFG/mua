@@ -373,7 +373,7 @@ class Milvus(RPCParam):
                group_by_field: str = "",
                guarantee_timestamp: int = 0,
                not_return_all_meta: bool = False,
-               consistency_level: CONSISTENCY_LEVEL = "bounded",
+               consistency_level: CONSISTENCY_LEVEL = "strong",
                use_default_consistency: bool = False,
                search_by_primary_keys: bool = False,
                ) -> SearchRequest:
@@ -416,7 +416,7 @@ class Milvus(RPCParam):
             guarantee_timestamp=guarantee_timestamp,
             nq=nq,
             not_return_all_meta=not_return_all_meta,
-            consistency_level=consistency_level,
+            consistency_level=get_consistency_level(consistency_level),
             use_default_consistency=use_default_consistency,
             search_by_primary_keys=search_by_primary_keys,
         )
@@ -462,7 +462,7 @@ class Milvus(RPCParam):
     def flush(self, *,
               db_name: str = "",
               collection_names: List[str] = [],
-              ) -> Union[Status, str]:
+              ) -> Union[FlushResponse, str]:
         _db_name = db_name or self._db_name()
         _collection_names = [self._collection_name()] if len(collection_names) == 0 else collection_names
         resp = self.stub.Flush(FlushRequest(db_name=_db_name, collection_names=_collection_names))

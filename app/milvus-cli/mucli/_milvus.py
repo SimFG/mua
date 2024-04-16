@@ -11,9 +11,10 @@ from milvus_connector.core._types import *
 from milvus_connector.core.util import CollectionField, construct_data, convert_data, ok, generate_random_data
 
 from mucli._option import *
+from mucli._case import *
 
 
-SUB_COMMAND_GROUP = ["proxy"]
+SUB_COMMAND_GROUP = ["case", "proxy"]
 
 # alias -> real command
 ALIAS_CMD = {
@@ -746,18 +747,14 @@ def compact_state_with_plans(cli, compaction_id):
 
 @compose(
     milvus_cli.command(),
-    confirmation_option('-f', '--force', prompt='Are you sure you want to drop the collection?'),
     collection_name(),
+    confirmation_option('-f', '--force', default=False, prompt='Are you sure you want to drop the collection?'),
 )
 @pass_obj
-def drop_collection(cli, name, force):
+def drop_collection(cli, name):
     client: milvus_connector.Milvus = cli()
     with client:
-        drop = True
-        if not force:
-            drop = confirm(f'Drop collections <{name}> ?')
-        if drop:
-            echo(client.json().drop_collection(collection_name=name))
+        echo(client.json().drop_collection(collection_name=name))
 
 
 @compose(
@@ -1021,10 +1018,23 @@ def connect(cli):
 
 @milvus_cli.group()
 def proxy():
-    """[inner] proxy command"""
+    """[group] proxy inner command"""
     pass
 
 
-# @proxy.command()
-# def get_metric():
-#     echo('Metric')
+@proxy.command()
+def get_metric():
+    echo('Metric')
+
+
+@milvus_cli.group()
+@pass_obj
+def case(cli):
+    """[group] milvus quick case command"""
+    pass
+
+
+@case.command()
+@pass_obj
+def hello_milvus(cli):
+    hello_milvus_case(cli)
