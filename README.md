@@ -139,11 +139,23 @@ mucli insert --name hello_milvus --random-data true
 
 mucli flush --name hello_milvus
 
-mucli create-index --name hello_milvus3
+mucli flush-state --name hello_milvus
+
+mucli create-index --name hello_milvus
 
 mucli load-collection --name hello_milvus
 
 mucli query --name hello_milvus --expr 'pk in [10, 20]' --field pk --field random
+
+mucli search --name hello_milvus --random-vector true --field pk
+
+mucli query-star --name hello_milvus
+
+mucli release-collection --name hello_milvus
+
+mucli drop-index --name hello_milvus
+
+mucli drop-collection --name hello_milvus
 
 mucli collections | jq '.collectionNames'
 
