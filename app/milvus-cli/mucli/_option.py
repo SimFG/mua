@@ -136,7 +136,7 @@ def format_collection_field(v: str) -> Dict[str, Any]:
         field_att[k] = v
     return field_att
 
-def get_auto_field() -> List[CollectionField]:
+def get_auto_field(dim: int = 32) -> List[CollectionField]:
     return [
                 CollectionField(
                     name="pk",
@@ -154,7 +154,7 @@ def get_auto_field() -> List[CollectionField]:
                     name="embedding",
                     dtype="float_vector",
                     desc="it's vector float field",
-                    dim=32,
+                    dim=dim,
                     ),
             ]
 

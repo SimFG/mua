@@ -137,6 +137,7 @@ def show_collections(cli):
                 help='Collection field, format: name:[field_name];dtype:[data_type];desc:[field_description];dim:[vector_dim];is_partition_key:false'),
          option('--auto-field', type=bool, help='quick fields, include: pk, random, embedding[vector:128]'),
          option('--auto-partition', type=bool, help='quick fields should include partition key field or not'),
+         option('--auto-dim', type=int, default=32, help='quick fields vector dim'),
          )
 @pass_obj
 def create_collection(cli, name,
@@ -148,6 +149,7 @@ def create_collection(cli, name,
                       pk_field, fields,
                       auto_field,
                       auto_partition,
+                      auto_dim,
                       ):
     """ create collection, param hints:
 
@@ -170,7 +172,7 @@ def create_collection(cli, name,
     with client:
         fields_obj = []
         if auto_field:
-            fields_obj.extend(get_auto_field())
+            fields_obj.extend(get_auto_field(dim=auto_dim))
             if auto_partition:
                 fields_obj.append(get_partition_key_field())
         else:
@@ -454,15 +456,17 @@ def query(cli, name, partition_names, expr, fields,
     milvus_cli.command(),
     collection_name(),
     partition_names(),
+    option('-e', '--expr', default="",
+           prompt_required=False, prompt='Expr', help='Expr'),
 )
 @pass_obj
-def query_star(cli, name, partition_names):
+def query_star(cli, name, partition_names, expr):
     client: milvus_connector.Milvus = cli()
     with client:
         echo(client.json().query(
             collection_name=name,
             partition_names=partition_names,
-            expr='',
+            expr=expr,
             output_fields=["count(*)"],
             consistency_level='strong'
             ))
