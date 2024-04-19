@@ -343,8 +343,8 @@ def delete(cli, name, partition_name, expr):
     partition_names(),
     option('-e', '--expr', prompt_required=False, prompt='Expr', help='Expr'),
     option('-f', '--field', 'fields', multiple=True, help='Fields'),
-    option('-vf', '--vector-field-name', prompt='Vector field name', help='Vector field name'),
-    option('-tk', '--topk', type=int, help='Topk'),
+    option('-vf', '--vector-field-name', default="embedding", prompt_required=False, prompt='Vector field name', help='Vector field name'),
+    option('-tk', '--topk', type=int, default=10, help='Topk'),
     option('-mt', '--metric-type', type=Choice(METRIC_TYPE_ARRAY, case_sensitive=False), default="L2", help='Metric type'),
     option('-vd', '--vector-data-file',
            type=Path(),
@@ -354,7 +354,7 @@ def delete(cli, name, partition_name, expr):
 )
 @pass_obj
 def search(cli, name, partition_names,
-           expr, fields, vector_field,
+           expr, fields, vector_field_name,
            topk, metric_type,
            vector_data_file, random_vector,
            ):
@@ -374,7 +374,7 @@ def search(cli, name, partition_names,
             vector_data = None
             real_vector_field = None
             for field in collection_info.schema.fields:
-                if field.name == vector_field:
+                if field.name == vector_field_name:
                     for type_param in field.type_params:
                         if type_param.key == 'dim':
                             # TODO it need to be random diff type according to the data type
@@ -386,7 +386,7 @@ def search(cli, name, partition_names,
                     if any([type_param.key == 'dim' for type_param in field.type_params]):
                         real_vector_field = field.name
             if not vector_data:
-                echo(f'Vector field not found: {vector_field}, dected vector field: {real_vector_field}')
+                echo(f'Vector field not found: {vector_field_name}, dected vector field: {real_vector_field}')
                 return
             vector_data = [vector_data]
         else:
@@ -399,13 +399,13 @@ def search(cli, name, partition_names,
                 # TODO it need to use the diff convert func according to the data type
                 vector_data = [list(map(float, line.split(','))) for line in file_content]
         echo(client.json().search(
-            client.construct_search_request(
+            req=client.construct_search_request(
                 collection_name=name,
                 partition_names=partition_names,
                 expr=expr,
                 output_fields=fields,
-                vector_field=vector_field,
-                topk=topk,
+                vector_field=vector_field_name,
+                top_k=topk,
                 metric_type=metric_type,
                 search_data=vector_data,
                 ),
