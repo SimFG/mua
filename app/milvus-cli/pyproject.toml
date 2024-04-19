@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mucli"
-version = "0.1.0"
+version = "0.0.3"
 description = "Light client directly to milvus service "
 authors = ["SimFG <1142838399@qq.com>"]
 readme = "README.md"

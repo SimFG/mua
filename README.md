@@ -72,6 +72,7 @@ It is recommended to use the mucli tool that corresponds to the respective Milvu
 
 |   mucli   |    milvus    |     date     |
 | --------- | ------------ | ------------ |
+| v0.0.3    | v2.4.0-rc.1  | 2024.4.19    |
 | v0.0.1    | v2.4.0-rc.1  | 2024.3.13    |
 
 ## mucli Quick Start
