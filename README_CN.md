@@ -158,6 +158,16 @@ mucli drop-index --name hello_milvus
 
 mucli drop-collection --name hello_milvus
 
+mucli create-user --username foo --password 123456
+
+mucli -u localhost:19530 -t foo:123456 collections
+
+mucli create-role --role-name insert_role
+
+mucli operate-user-role --username foo --rolename insert_role --add
+
+mucli operate-privilege --rolename insert_role --object-name foo --object-type collection --privilege Insert --grant
+
 mucli collections | jq '.collectionNames'
 
 mucli collections | jq '.collectionNames | length'

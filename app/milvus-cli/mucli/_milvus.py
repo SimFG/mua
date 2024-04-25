@@ -1,7 +1,10 @@
 import csv
+from email.policy import default
 import os
 import random
+import urllib
 from typing import List
+import urllib.request
 
 from click import (
     Choice,
@@ -1223,6 +1226,20 @@ def connect(cli):
     client: milvus_connector.Milvus = cli()
     with client:
         echo(client.json().connect())
+
+
+@compose(
+    milvus_cli.command(),
+    option("-u", "--uri", prompt="URI", help="URI", default="http://localhost:9091"),
+    option("-a", "--auth", prompt="Auth key", help="Auth key", default="by-dev"),
+    option("-e", "--expr", prompt="Expr", help="Expr", default="param.ProxyCfg.MaxUserNum.GetValue()"),
+)
+@pass_obj
+def expr(cli, uri, auth, expr):
+    url = f"{uri}/expr?auth={auth}&code={expr}"
+    response = urllib.request.urlopen(url)
+    content = response.read().decode('utf-8')
+    echo(content)
 
 
 @milvus_cli.group()
