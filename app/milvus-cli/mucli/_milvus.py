@@ -1230,13 +1230,35 @@ def connect(cli):
 
 @compose(
     milvus_cli.command(),
-    option("-u", "--uri", prompt="URI", help="URI", default="http://localhost:9091"),
-    option("-a", "--auth", prompt="Auth key", help="Auth key", default="by-dev"),
-    option("-e", "--expr", prompt="Expr", help="Expr", default="param.ProxyCfg.MaxUserNum.GetValue()"),
+    option("-u", "--uri", prompt_required=False,
+           prompt="URI", help="URI", default="http://localhost:9091"),
+    option("-a", "--auth", prompt_required=False,
+           prompt="Auth key", help="Auth key", default="by-dev"),
+    option("-e", "--expr", prompt_required=False,
+           prompt="Expr", help="Expr", default="param.ProxyCfg.MaxUserNum.GetValue()"),
 )
 @pass_obj
 def expr(cli, uri, auth, expr):
     url = f"{uri}/expr?auth={auth}&code={expr}"
+    response = urllib.request.urlopen(url)
+    content = response.read().decode('utf-8')
+    echo(content)
+
+
+@compose(
+    milvus_cli.command(),
+    option("-u", "--uri", prompt_required=False,
+           prompt="URI", help="URI", default="http://localhost:9091"),
+    option("-a", "--auth", prompt_required=False,
+           prompt="Auth key", help="Auth key", default="by-dev"),
+    option("-c", "--component", prompt_required=False,
+           prompt="Component", help="Component", default="proxy"),
+    option("-f", "--filter", prompt_required=False,
+           prompt="Filter world", help="Filter world", default="num"),
+)
+@pass_obj
+def get_config(cli, uri, auth, component, filter):
+    url = f'{uri}/expr?auth={auth}&code=param.GetComponentConfigurations("{component}","{filter}")'
     response = urllib.request.urlopen(url)
     content = response.read().decode('utf-8')
     echo(content)
@@ -1264,3 +1286,49 @@ def case(cli):
 @pass_obj
 def hello_milvus(cli):
     hello_milvus_case(cli)
+
+
+@milvus_cli.group()
+@option("-u", "--uri",
+        prompt_required=False, prompt="URI", help="URI", default="http://localhost:21123")
+@pass_context
+def query_node(ctx, uri):
+    """[group] query node inner command"""
+    ctx.obj = lambda: milvus_connector.QueryNode(uri=uri)
+
+
+@query_node.command()
+@pass_obj
+def get_data_distribution(cli):
+    client: milvus_connector.QueryNode = cli()
+    with client:
+        echo(client.json().get_data_distribution())
+
+
+@query_node.command()
+@option("-m", "--metric-type", prompt_required=False,
+        prompt="Metric type", help="Metric type", default="system_info")
+@pass_obj
+def query_node_metric(cli, metric_type):
+    client: milvus_connector.QueryNode = cli()
+    with client:
+        echo(client.json().get_metric(metric_type=metric_type))
+
+
+@query_node.command()
+@option("-p", "--pattern",
+        prompt_required=False, default="", prompt="Config", help="Config")
+@pass_obj
+def query_node_configs(cli, pattern):
+    client: milvus_connector.QueryNode = cli()
+    with client:
+        echo(client.json().show_configs(pattern=pattern))
+
+
+@query_node.command()
+@option("-s", "--segment-id", "segment-ids", multiple=True, prompt="Segment id", help="Segment id")
+@pass_obj
+def get_segment_info(cli, segment_ids):
+    client: milvus_connector.QueryNode = cli()
+    with client:
+        echo(client.json().get_segment_info(segment_ids=segment_ids))
