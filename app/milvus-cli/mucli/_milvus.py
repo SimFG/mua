@@ -284,7 +284,7 @@ def create_collection(
     with client:
         fields_obj = []
         if auto_field:
-            fields_obj.extend(get_auto_field(dim=auto_dim))
+            fields_obj.extend(get_auto_field(dim=auto_dim, auto_id=auto_id))
             if auto_partition:
                 fields_obj.append(get_partition_key_field())
         else:
@@ -744,6 +744,12 @@ def load_progress(cli, name, partition_names):
             )
         )
 
+@compose(milvus_cli.command(), collection_name())
+@pass_obj
+def get_replicas(cli, name):
+    client: milvus_connector.Milvus = cli()
+    with client:
+        echo(client.json().get_replicas(collection_name=name))
 
 @compose(
     milvus_cli.command(),
@@ -1251,14 +1257,32 @@ def expr(cli, uri, auth, expr):
            prompt="URI", help="URI", default="http://localhost:9091"),
     option("-a", "--auth", prompt_required=False,
            prompt="Auth key", help="Auth key", default="by-dev"),
-    option("-c", "--component", prompt_required=False,
-           prompt="Component", help="Component", default="proxy"),
     option("-f", "--filter", prompt_required=False,
-           prompt="Filter world", help="Filter world", default="num"),
+           prompt="Filter world", help="Filter world", default="proxy.maxNameLength"),
 )
 @pass_obj
-def get_config(cli, uri, auth, component, filter):
+def get_config(cli, uri, auth, filter):
+    component = filter.split(".")[0]
     url = f'{uri}/expr?auth={auth}&code=param.GetComponentConfigurations("{component}","{filter}")'
+    response = urllib.request.urlopen(url)
+    content = response.read().decode('utf-8')
+    echo(content)
+
+
+@compose(
+    milvus_cli.command(),
+    option("-u", "--uri", prompt_required=False,
+           prompt="URI", help="URI", default="http://localhost:9091"),
+    option("-a", "--auth", prompt_required=False,
+           prompt="Auth key", help="Auth key", default="by-dev"),
+    option("-k", "--key", prompt_required=False,
+           prompt="Config key", help="Config Key", default="proxy.maxNameLength"),
+    option("-v", "--value", prompt_required=False,
+           prompt="Config value", help="Config value", default="256"),
+)
+@pass_obj
+def set_config(cli, uri, auth, key, value):
+    url = f'{uri}/expr?auth={auth}&code=param.Save("{key}","{value}")'
     response = urllib.request.urlopen(url)
     content = response.read().decode('utf-8')
     echo(content)

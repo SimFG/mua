@@ -139,11 +139,12 @@ def format_collection_field(v: str) -> Dict[str, Any]:
     return field_att
 
 
-def get_auto_field(dim: int = 32) -> List[CollectionField]:
+def get_auto_field(dim: int = 32, auto_id: bool = False) -> List[CollectionField]:
     return [
         CollectionField(
             name="pk",
             is_primary_key=True,
+            auto_id=auto_id,
             dtype="int64",
             desc="it's the pk field",
         ),

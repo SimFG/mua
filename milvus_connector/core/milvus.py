@@ -948,7 +948,7 @@ class Milvus(RPCParam):
                      ) -> Union[GetReplicasResponse, str]:
         _db_name = db_name or self._db_name()
         _collection_name = collection_name or self._collection_name()
-        resp = self.stub.GetReplica(GetReplicasRequest(
+        resp = self.stub.GetReplicas(GetReplicasRequest(
             db_name=_db_name,
             collection_name=_collection_name,
             collectionID=collection_id,
