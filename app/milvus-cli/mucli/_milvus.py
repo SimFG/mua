@@ -1,5 +1,4 @@
 import csv
-from email.policy import default
 import os
 import random
 import urllib
@@ -62,9 +61,12 @@ SUB_COMMAND_GROUP = ["case", "proxy"]
 # alias -> real command
 ALIAS_CMD = {
     "collections": "show-collections",
+    "collection": "describe-collection",
+    "load": "load-collection",
     "list-collections": "show-collections",
     "partitions": "show-partitions",
     "list-partitions": "show-partitions",
+    "index": "describe-index",
     "databases": "list-databases",
     "show-databases": "list-databases",
     "users": "select-user",
