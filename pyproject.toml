@@ -2,7 +2,7 @@
 name = "milvus-connector"
 version = "0.1.0"
 description = ""
-authors = ["SimFG <1142838399@qq.com>"]
+authors = ["SimFG <simf00544@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
