@@ -450,6 +450,7 @@ def insert(cli, name, partition_name, data_file, random_data, random_num):
                 partition_name=partition_name,
                 fields_data=insert_data,
                 num_rows=num_row,
+                print_ids=False,
             )
         )
 
@@ -1309,9 +1310,10 @@ def case(cli):
 
 
 @case.command()
+@option("-d", "--drop-collection", type=bool, default=True, help="Drop collection or not")
 @pass_obj
-def hello_milvus(cli):
-    hello_milvus_case(cli)
+def hello_milvus(cli, drop_collection):
+    hello_milvus_case(cli, drop_collection)
 
 
 @milvus_cli.group()

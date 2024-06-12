@@ -12,7 +12,7 @@ from mucli._option import (
 )
 
 
-def hello_milvus_case(cli):
+def hello_milvus_case(cli, drop):
     client: milvus_connector.Milvus = cli()
     with client:
         name = "hello_milvus"
@@ -134,8 +134,9 @@ def hello_milvus_case(cli):
             echo(f"drop index fail: {drop_index_resp}")
             return
 
-        echo("drop `hello_milvus` collection")
-        drop_resp = client.drop_collection(collection_name=name)
-        if not ok(drop_resp):
-            echo(f"drop collection fail: {drop_resp}")
-            return
+        if drop:
+            echo("drop `hello_milvus` collection")
+            drop_resp = client.drop_collection(collection_name=name)
+            if not ok(drop_resp):
+                echo(f"drop collection fail: {drop_resp}")
+                return

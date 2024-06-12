@@ -289,6 +289,7 @@ class Milvus(RPCParam):
                partition_name: str = "",
                fields_data: List[Data] = None,
                num_rows: int = 0,
+               print_ids: bool = True,
                ) -> Union[MutationResult, str]:
         _db_name = db_name or self._db_name()
         _collection_name = collection_name or self._collection_name()
@@ -303,6 +304,9 @@ class Milvus(RPCParam):
         resp = self.stub.Insert(req)
         self._intercept_resp(resp)
         if self._is_json():
+            if not print_ids:
+                resp.IDs.Clear()
+                del resp.succ_index[:]
             return json_format.MessageToJson(resp)
         return resp
 
