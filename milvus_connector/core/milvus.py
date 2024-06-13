@@ -19,7 +19,7 @@ from ..protocol.feder_pb2 import *
 from ._param import RPCParam
 from ._const import *
 from ._types import *
-from .util import CollectionField, Data
+from .util import CollectionField, Data, grpc_error_handler
 from .._interceptor import header_adder_interceptor
 
 
@@ -110,6 +110,7 @@ class Milvus(RPCParam):
         m.add_param(PARTITION_NAME, name)
         return m
 
+    @grpc_error_handler
     def create_collection(self, *,
                           db_name: str = "",
                           collection_name: str = "",
@@ -160,6 +161,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_collection(self, *,
                         db_name: str = "",
                         collection_name: str = "",
@@ -172,6 +174,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def alter_collection(self, *,
                          db_name: str = "",
                          collection_name: str = "",
@@ -192,6 +195,7 @@ class Milvus(RPCParam):
         return resp
 
     @deprecated("Use describe_collection instead")
+    @grpc_error_handler
     def has_collection(self, *,
                           db_name: str = "",
                           collection_name: str = "",
@@ -209,6 +213,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def describe_collection(self, *,
                             db_name: str = "",
                             collection_name: str = "",
@@ -228,6 +233,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def load_collection(self, *,
                         db_name: str = "",
                         collection_name: str = "",
@@ -249,6 +255,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def release_collection(self, *,
                            db_name: str = "",
                            collection_name: str = "",
@@ -261,6 +268,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_collection_statistics(self, *,
                                     db_name: str = "",
                                     collection_name: str = "",
@@ -273,6 +281,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def show_collections(self, *,
                          db_name: str = "",
                          ) -> Union[ShowCollectionsResponse, str]:
@@ -283,6 +292,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def insert(self, *,
                db_name: str = "",
                collection_name: str = "",
@@ -310,6 +320,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def delete(self, *,
                db_name: str = "",
                collection_name: str = "",
@@ -333,6 +344,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def upsert(self, *,
                db_name: str = "",
                collection_name: str = "",
@@ -425,6 +437,7 @@ class Milvus(RPCParam):
             search_by_primary_keys=search_by_primary_keys,
         )
 
+    @grpc_error_handler
     def search(self, *, req: SearchRequest) -> Union[SearchResults, str]:
         resp = self.stub.Search(req)
         self._intercept_resp(resp)
@@ -432,6 +445,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def hybrid_search(self, *,
                       db_name: str = "",
                       collection_name: str = "",
@@ -463,6 +477,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def flush(self, *,
               db_name: str = "",
               collection_names: List[str] = [],
@@ -475,6 +490,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_flush_state(self, *,
                         db_name: str = "",
                         collection_name: str = "",
@@ -494,6 +510,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def query(self, *,
               db_name: str = "",
               collection_name: str = "",
@@ -536,6 +553,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def flush_all(self, *,
                   db_name: str = "",
                   ) -> Union[Status, str]:
@@ -546,6 +564,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_flush_all_state(self, *,
                             db_name: str = "",
                             flush_all_ts: int = 0,
@@ -560,6 +579,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_partition(self, *,
                          db_name: str = "",
                          collection_name: str = "",
@@ -578,6 +598,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_partition(self, *,
                        db_name: str = "",
                        collection_name: str = "",
@@ -597,6 +618,7 @@ class Milvus(RPCParam):
         return resp
 
     @deprecated("Use show_partitions instead")
+    @grpc_error_handler
     def has_partition(self, *,
                       db_name: str = "",
                       collection_name: str = "",
@@ -617,6 +639,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def load_partitions(self, *,
                        db_name: str = "",
                        collection_name: str = "",
@@ -641,6 +664,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def release_partitions(self, *,
                           db_name: str = "",
                           collection_name: str = "",
@@ -659,6 +683,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_partition_statistics(self, *,
                                  db_name: str = "",
                                  collection_name: str = "",
@@ -677,6 +702,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def show_partitions(self, *,
                         db_name: str = "",
                         collection_name: str = "",
@@ -694,6 +720,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_loading_progress(self, *,
                             db_name: str = "",
                             collection_name: str = "",
@@ -712,6 +739,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_load_state(self, *,
                        db_name: str = "",
                        collection_name: str = "",
@@ -730,6 +758,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_alias(self, *,
                      db_name: str = "",
                      collection_name: str = "",
@@ -747,6 +776,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_alias(self, *,
                    db_name: str = "",
                    alias_name: str = "",
@@ -761,6 +791,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def alter_alias(self, *,
                     db_name: str = "",
                     collection_name: str = "",
@@ -778,6 +809,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def describe_alias(self, *,
                        db_name: str = "",
                        alias_name: str = "",
@@ -792,6 +824,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def list_aliases(self, *,
                      db_name: str = "",
                      collection_name: str = "",
@@ -807,6 +840,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_index(self, *,
                      db_name: str = "",
                      collection_name: str = "",
@@ -838,6 +872,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def alter_index(self, *,
                     db_name: str = "",
                     collection_name: str = "",
@@ -857,6 +892,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def describe_index(self, *,
                        db_name: str = "",
                        collection_name: str = "",
@@ -878,6 +914,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_index_statistics(self, *,
                              db_name: str = "",
                              collection_name: str = "",
@@ -897,6 +934,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_index(self, *,
                    db_name: str = "",
                    collection_name: str = "",
@@ -914,6 +952,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_persistent_segment_info(self, *,
                             db_name: str = "",
                             collection_name: str = "",
@@ -929,6 +968,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_query_segment_info(self, *,
                             db_name: str = "",
                             collection_name: str = "",
@@ -944,6 +984,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_replicas(self, *,
                      db_name: str = "",
                      collection_name: str = "",
@@ -963,6 +1004,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_metric(self) -> Union[GetMetricsResponse, str]:
         resp = self.stub.GetMetrics(GetMetricsRequest(
             request="system_info",
@@ -972,6 +1014,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_component_states(self) -> Union[ComponentStates, str]:
         resp = self.stub.GetComponentStates(GetComponentStatesRequest())
         self._intercept_resp(resp)
@@ -979,6 +1022,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def load_banlance(self, *,
                       db_name: str = "",
                       collection_name: str = "",
@@ -1000,6 +1044,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def compaction(self, *,
                    collection_id: int = 0,
                    time_travel: int = 0,
@@ -1013,6 +1058,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_compaction_state(self, *,
                              compaction_id: int = 0,
                              ) -> Union[GetCompactionStateResponse, str]:
@@ -1024,6 +1070,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_compaction_state_with_plans(self, *,
                                        compaction_id: int = 0,
                                        ) -> Union[GetCompactionPlansResponse, str]:
@@ -1035,6 +1082,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def bulk_insert(self, *,
                     db_name: str = "",
                     collection_name: str = "",
@@ -1068,6 +1116,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_bulk_insert_state(self, *,
                               task_id: str = "",
                               ) -> Union[GetImportStateResponse, str]:
@@ -1079,6 +1128,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def list_bulk_insert_tasks(self, *,
                               db_name: str = "",
                               collection_name: str = "",
@@ -1096,6 +1146,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_user(self, *,
                     username: str = "",
                     password: str = "",
@@ -1109,6 +1160,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def update_user(self, *,
                     username: str = "",
                     old_password: str = "",
@@ -1124,6 +1176,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def delete_user(self, *,
                     username: str = "",
                     ) -> Union[Status, str]:
@@ -1135,6 +1188,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def list_users(self) -> Union[ListCredUsersResponse, str]:
         resp = self.stub.ListCredentials(ListCredUsersRequest())
         self._intercept_resp(resp)
@@ -1142,6 +1196,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_role(self, *,
                     role_name: str = "",
                     ) -> Union[Status, str]:
@@ -1153,6 +1208,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_role(self, *,
                     role_name: str = "",
                     ) -> Union[Status, str]:
@@ -1164,6 +1220,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def operate_user_role(self, *,
                           username: str = "",
                           role_name: str = "",
@@ -1184,6 +1241,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def select_user(self, *,
                     username: str = "",
                     include_role_info: bool = False,
@@ -1197,6 +1255,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def select_role(self, *,
                     role_name: str = "",
                     include_user_info: bool = False,
@@ -1210,6 +1269,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def operate_privilege(self, *,
                           db_name: str = "",
                           role_name: str = "",
@@ -1249,6 +1309,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def select_grant(self, *,
                      db_name: str = "",
                      role_name: str = "",
@@ -1279,6 +1340,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def get_version(self) -> Union[GetVersionResponse, str]:
         resp = self.stub.GetVersion(GetVersionRequest())
         self._intercept_resp(resp)
@@ -1286,6 +1348,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def check_health(self) -> Union[CheckHealthResponse, str]:
         resp = self.stub.CheckHealth(CheckHealthRequest())
         self._intercept_resp(resp)
@@ -1293,6 +1356,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_resource_group(self, *,
                               name: str = "",
                               ) -> Union[Status, str]:
@@ -1304,6 +1368,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_resource_group(self, *,
                             name: str = "",
                             ) -> Union[Status, str]:
@@ -1315,6 +1380,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def transfer_node(self, *,
                       source_resource_group: str = "",
                       dst_resource_group: str = "",
@@ -1330,6 +1396,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def transfer_replica(self, *,
                          db_name: str = "",
                          collection_name: str = "",
@@ -1351,6 +1418,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def list_resource_groups(self) -> Union[ListResourceGroupsResponse, str]:
         resp = self.stub.ListResourceGroups(ListResourceGroupsRequest())
         self._intercept_resp(resp)
@@ -1358,6 +1426,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def describe_resource_group(self, *,
                                 resource_group: str = "",
                                 ) -> Union[DescribeResourceGroupResponse, str]:
@@ -1369,6 +1438,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def rename_collection(self, *,
                           db_name: str = "",
                           new_db_name: str = "",
@@ -1387,6 +1457,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def list_indexed_segment(self, *,
                               collection_name: str = "",
                               index_name: str = "",
@@ -1401,6 +1472,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def describe_segment_index_data(self, *,
                                     collection_name: str = "",
                                     index_name: str = "",
@@ -1418,6 +1490,7 @@ class Milvus(RPCParam):
         return resp
 
     # TODO it need to more information
+    @grpc_error_handler
     def connect(self) -> Union[ConnectResponse, str]:
         now = datetime.datetime.now()
         resp = self.stub.Connect(ConnectRequest(
@@ -1432,6 +1505,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def alloc_timestamp(self) -> Union[AllocTimestampResponse, str]:
         resp = self.stub.AllocTimestamp(AllocTimestampRequest())
         self._intercept_resp(resp)
@@ -1439,6 +1513,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def create_database(self, *,
                         db_name: str = "",
                         ) -> Union[Status, str]:
@@ -1451,6 +1526,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def drop_database(self, *,
                       db_name: str = "",
                       ) -> Union[Status, str]:
@@ -1463,6 +1539,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def list_databases(self) -> Union[ListDatabasesResponse, str]:
         resp = self.stub.ListDatabases(ListDatabasesRequest())
         self._intercept_resp(resp)
@@ -1470,6 +1547,7 @@ class Milvus(RPCParam):
             return json_format.MessageToJson(resp)
         return resp
 
+    @grpc_error_handler
     def replicate_message(self, *,
                           channel_name: str = "",
                           ) -> Union[ReplicateMessageResponse, str]:

@@ -1,4 +1,3 @@
-import copy
 import json
 from typing import Any, Optional, Union, Literal, List
 from typing_extensions import Self
@@ -6,6 +5,8 @@ from typing_extensions import Self
 import grpc
 from google.protobuf import json_format
 from furl import furl
+
+from milvus_connector.core.util import grpc_error_handler
 
 from ..protocol.query_coord_pb2_grpc import QueryNodeStub
 from ..protocol.query_coord_pb2 import *
@@ -67,6 +68,7 @@ class QueryNode():
         m.style = "json"
         return m
 
+    @grpc_error_handler
     def get_data_distribution(self) -> Union[GetDataDistributionResponse, str]:
         req = GetDataDistributionRequest()
         resp = self.stub.GetDataDistribution(req)
@@ -75,6 +77,7 @@ class QueryNode():
             return json_format.MessageToDict(resp)
         return resp
 
+    @grpc_error_handler
     def get_metric(self, metric_type: str = "system_info") -> Union[GetMetricsResponse, str]:
         req = GetMetricsRequest(request=json.dumps({"metric_type": metric_type}))
         resp = self.stub.GetMetrics(req)
@@ -83,6 +86,7 @@ class QueryNode():
             return json_format.MessageToDict(resp)
         return resp
 
+    @grpc_error_handler
     def show_configs(self, pattern: str = "") -> Union[ShowConfigurationsResponse, str]:
         req = ShowConfigurationsRequest(pattern=pattern)
         resp = self.stub.ShowConfigurations(req)
@@ -91,6 +95,7 @@ class QueryNode():
             return json_format.MessageToDict(resp)
         return resp
 
+    @grpc_error_handler
     def get_segment_info(self, collection_id: int = 0, segment_ids: List[int] = None) -> Union[GetSegmentInfoResponse, str]:
         req = GetSegmentInfoRequest(collectionID=collection_id, segmentIDs=segment_ids)
         resp = self.stub.GetSegmentInfo(req)

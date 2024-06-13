@@ -177,6 +177,12 @@ mucli get-config -c dataNode -f datanode.memory.forcesyncsegmentnum
 mucli querynode get-data-distribution
 
 mucli query-node query-node-metric
+
+mucli select-grant --database default --rolename public
+
+mucli select-role --rolename public --include
+
+mucli select-role --username root --include
 ```
 
 ## Follow-up Plan
@@ -184,8 +190,8 @@ mucli query-node query-node-metric
 This project was developed in my spare time because I need to interact with Milvus frequently in my work. Typically, if there aren't too many issues which are not handled, I will fix them within 2-3 days. Your star will be my greatest source of support!
 
 1. ~~Develop an HTTP proxy service for Milvus service.~~ (milvus has supported the restful api)
-2. Add RPC calls for internal nodes.
+2. [done] Add RPC calls for internal nodes.
 3. [done] Query Milvus configurations.
-4. Provide more user-friendly error messages when encountering exceptions.
+4. [done] Provide more user-friendly error messages when encountering exceptions.
 5. Implement dynamic loading of commands.
 6. Optimize the usage of search/query and other interfaces.

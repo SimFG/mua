@@ -177,6 +177,12 @@ mucli get-config -c dataNode -f datanode.memory.forcesyncsegmentnum
 mucli querynode get-data-distribution
 
 mucli query-node query-node-metric
+
+mucli select-grant --database default --rolename public
+
+mucli select-role --rolename public --include
+
+mucli select-role --username root --include
 ```
 
 ## 后续规划
@@ -184,8 +190,8 @@ mucli query-node query-node-metric
 这个项目是在业余时间里开发的，因为在工作中需要频繁与Milvus进行交互。通常情况下，如果没有太多的issue反馈堆积，会在2-3天内进行修复并给出修复小版本。你的关注将是我最大的支持动力！
 
 1. ~~开发 Milvus 服务的 HTTP 代理服务。~~ (milvus已经支持了restful api调用)
-2. 添加内部节点的 RPC 调用功能。
+2. [完成] 添加内部节点的 RPC 调用功能。
 3. [完成] 查询 Milvus 配置。
-4. 在遇到异常情况时，提供更友好的错误信息。
+4. [完成] 在遇到异常情况时，提供更友好的错误信息。
 5. 实现动态加载命令功能。
 6. 优化 search/query 等接口的使用体验。

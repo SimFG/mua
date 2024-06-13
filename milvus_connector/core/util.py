@@ -1,6 +1,10 @@
+from functools import wraps
 import random
+import sys
 from typing import Any, Dict, List, Union
 from abc import ABCMeta, abstractmethod
+
+import grpc
 
 from ._types import *
 from ..protocol.schema_pb2 import *
@@ -332,6 +336,26 @@ class ArrayData(ScalarData):
 
 def ok(s: Status) -> bool:
     return s.code == 0 and s.error_code == Success
+
+def grpc_error_handler(func):
+    """
+    Decorator to handle gRPC errors.
+    
+    This decorator will capture any gRPC errors that occur within the decorated function
+    and print the error message, then exit the program.
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except grpc.RpcError as e:
+            if isinstance(e, grpc.Call):
+                print(f"gRPC error code: {e.code()}")
+                print(f"gRPC error message: {e.details()}")
+            else:
+                print(f"gRPC error occurred: {e}")
+            sys.exit(1)
+    return wrapper
 
 def construct_data(field_name: str, data_type: DataType, data: List) -> Data:
     dtype_str = DataType.Name(data_type).lower()
