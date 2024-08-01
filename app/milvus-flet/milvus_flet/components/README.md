@@ -1,0 +1,1 @@
+This folder is a simple copy, sourced from: https://github.com/flet-dev/examples/tree/main/python/apps/controls-gallery/components

@@ -1048,10 +1048,10 @@ class Milvus(RPCParam):
     def compaction(self, *,
                    collection_id: int = 0,
                    time_travel: int = 0,
-                   ) -> Union[Status, str]:
+                   ) -> Union[ManualCompactionResponse, str]:
         resp = self.stub.ManualCompaction(ManualCompactionRequest(
             collectionID=collection_id,
-            timeTravel=time_travel,
+            timetravel=time_travel,
         ))
         self._intercept_resp(resp)
         if self._is_json():

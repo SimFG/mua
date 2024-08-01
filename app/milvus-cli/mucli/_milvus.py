@@ -1,6 +1,7 @@
 import csv
 import os
 import random
+import time
 import urllib
 from typing import List
 import urllib.request
@@ -37,6 +38,7 @@ from milvus_connector.core.util import (
     generate_random_data,
     ok,
 )
+from milvus_connector.protocol.common_pb2 import LoadStateLoaded, Completed
 from mucli._case import hello_milvus_case
 from mucli._option import (
     collection_id,
@@ -505,6 +507,7 @@ def delete(cli, name, partition_name, expr):
         help="Vector data file",
     ),
     option("-ri", "--random-vector", type=bool, default=False, help="Random vector search"),
+    option("--ts", default=0)
 )
 @pass_obj
 def search(
@@ -518,6 +521,7 @@ def search(
     metric_type,
     vector_data_file,
     random_vector,
+    ts,
 ):
     client: milvus_connector.Milvus = cli()
     with client:
@@ -540,6 +544,8 @@ def search(
                         if type_param.key == "dim":
                             # TODO it need to be random diff type according to the data type
                             vector_data = [random.random() for _ in range(int(type_param.value))]
+                            with open("random_data.txt", "w") as file:
+                                file.write(",".join(str(x) for x in vector_data))
                             break
                 elif vector_data:
                     break
@@ -572,6 +578,7 @@ def search(
                     top_k=topk,
                     metric_type=metric_type,
                     search_data=vector_data,
+                    guarantee_timestamp=ts,
                 ),
             )
         )
@@ -781,6 +788,85 @@ def flush(cli, name):
     collection_name(),
 )
 @pass_obj
+def flush_and_wait(cli, name):
+    client: milvus_connector.Milvus = cli()
+    with client:
+        flush_resp = client.flush(collection_names=[name])
+        if not ok(flush_resp.status):
+            echo(f"flush collection fail: {flush_resp}")
+            return
+        echo("flushing...")
+        flush_state_resp = client.get_flush_state(collection_name=name)
+        while not flush_state_resp.flushed:
+            echo("waiting flush...")
+            time.sleep(0.5)
+            flush_state_resp = client.get_flush_state(collection_name=name)
+        echo("flushed")
+
+
+@compose(
+    milvus_cli.command(),
+    collection_name(),
+        option(
+        "-it",
+        "--index-type",
+        type=Choice(INDEX_TYPE_ARRAY, case_sensitive=False),
+        default="IVF_FLAT",
+        prompt_required=False,
+        prompt="Index type",
+        help="Index type",
+    ),
+    option(
+        "-mt",
+        "--metric-type",
+        type=Choice(METRIC_TYPE_ARRAY, case_sensitive=False),
+        default="L2",
+        prompt_required=False,
+        prompt="Metric type",
+        help="Metric type",
+    ),
+)
+@pass_obj
+def index_and_load(cli, name, index_type, metric_type):
+    client: milvus_connector.Milvus = cli()
+    with client:
+        collection_info = client.describe_collection(collection_name=name)
+        if not ok(collection_info.status):
+            echo(f"fail to get collection info, status: {collection_info.status}")
+            return
+        for field in collection_info.schema.fields:
+            if any([type_param.key == "dim" for type_param in field.type_params]):
+                field_name = field.name
+
+        echo(f"create index for `{name}` collection")
+        create_index_resp = client.create_index(
+                collection_name=name,
+                index_name="vec_idx",
+                field_name=field_name,
+                index_type=index_type,
+                metric_type=metric_type,
+                nlist=128,
+            )
+        if not ok(create_index_resp):
+            echo(f"create index fail: {create_index_resp}")
+            return
+        echo(f"load `{name}` collection")
+        load_resp = client.load_collection(collection_name=name)
+        if not ok(load_resp):
+            echo(f"load collection fail: {load_resp}")
+            return
+        load_state_resp = client.get_load_state(collection_name=name)
+        while load_state_resp.state != LoadStateLoaded:
+            echo(f"load state: {load_state_resp.state}")
+            time.sleep(0.5)
+            load_state_resp = client.get_load_state(collection_name=name)
+        echo("index and load done")
+
+@compose(
+    milvus_cli.command(),
+    collection_name(),
+)
+@pass_obj
 def flush_state(cli, name):
     client: milvus_connector.Milvus = cli()
     with client:
@@ -911,6 +997,32 @@ def compact(cli, name, cid):
                 echo(client.json().compaction(collection_id=rsp.collectionID))
             else:
                 echo(rsp)
+
+
+@compose(
+    milvus_cli.command(),
+    collection_name(),
+)
+@pass_obj
+def compact_and_wait(cli, name):
+    client: milvus_connector.Milvus = cli()
+    with client:
+        rsp = client.describe_collection(collection_name=name)
+        if not ok(rsp.status):
+            echo(rsp)
+            return
+        compact_resp = client.compaction(collection_id=rsp.collectionID)
+        if not ok(compact_resp.status):
+            echo(compact_resp)
+            return
+        compact_id = compact_resp.compactionID
+        echo("compacting...")
+        state = client.get_compaction_state(compaction_id=compact_id)
+        while state.state != Completed:
+            echo("waiting compact...")
+            time.sleep(0.5)
+            state = client.get_compaction_state(compaction_id=compact_id)
+        echo("compacted")
 
 
 @compose(

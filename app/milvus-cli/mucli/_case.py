@@ -67,6 +67,12 @@ def hello_milvus_case(cli, drop):
             echo(f"flush collection fail: {flush_resp}")
             return
 
+        flush_state_resp = client.get_flush_state(collection_name=name)
+        while not flush_state_resp.flushed:
+            echo("waiting flush...")
+            time.sleep(0.5)
+            flush_state_resp = client.get_flush_state(collection_name=name)
+
         echo("create index for `hello_milvus` collection")
         create_index_resp = client.create_index(
             collection_name=name,
