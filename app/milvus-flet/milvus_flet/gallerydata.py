@@ -57,13 +57,13 @@ class GalleryData:
                 selected_icon=ft.icons.CLOSED_CAPTION,
                 index=1,
             ),
-            # ControlGroup(
-            #     name="displays",
-            #     label="Displays",
-            #     icon=ft.icons.INFO_OUTLINED,
-            #     selected_icon=ft.icons.INFO_SHARP,
-            #     index=2,
-            # ),
+            ControlGroup(
+                name="expr",
+                label="Expr Tools",
+                icon=ft.icons.LOCATION_SEARCHING_OUTLINED,
+                selected_icon=ft.icons.LOCATION_SEARCHING,
+                index=2,
+            ),
             # ControlGroup(
             #     name="buttons",
             #     label="Buttons",
@@ -187,7 +187,7 @@ class GalleryData:
                             example_item.file_name = (
                                 module_name.replace(".", "/") + ".py"
                             )
-                            example_item.name = module.name
+                            example_item.name = module.name if hasattr(module, 'name') else ""
                             example_item.order = file[
                                 :2
                             ]  # first 2 characters of example file name (e.g. '01')

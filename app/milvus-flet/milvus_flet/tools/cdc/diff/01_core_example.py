@@ -130,8 +130,6 @@ if __name__ == '__main__':
 
 import flet as ft
 
-name = "Diff upstream and downstream milvus"
-
 def example():
     up_host = ft.TextField(label="Upstream host", value="", col=8)
     up_port = ft.TextField(label="Upstream port", value="19530", col=4)

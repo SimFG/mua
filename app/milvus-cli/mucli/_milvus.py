@@ -1142,7 +1142,7 @@ def drop_role(cli, rolename):
     client: milvus_connector.Milvus = cli()
     with client:
         echo(
-            client.json().delete_role(
+            client.json().drop_role(
                 role_name=rolename,
             )
         )
